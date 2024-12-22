@@ -8,7 +8,35 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/tvTotal2"
+        android:id="@+id/tvTotalPastel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="247dp"
+        android:layout_marginTop="314dp"
+        android:layout_marginEnd="148dp"
+        android:layout_marginBottom="398dp"
+        android:text="$0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTotalCazuela"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="247dp"
+        android:layout_marginTop="478dp"
+        android:layout_marginEnd="148dp"
+        android:layout_marginBottom="234dp"
+        android:text="$0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTotal"
         android:layout_width="70dp"
         android:layout_height="17dp"
         android:layout_marginStart="170dp"
@@ -36,7 +64,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvPropina2"
+        android:id="@+id/tvPropina"
         android:layout_width="65dp"
         android:layout_height="18dp"
         android:layout_marginStart="170dp"
@@ -50,7 +78,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Switch
-        android:id="@+id/swPropina2"
+        android:id="@+id/swPropina"
         android:layout_width="49dp"
         android:layout_height="28dp"
         android:layout_marginStart="42dp"
@@ -79,7 +107,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvComida2"
+        android:id="@+id/tvComida"
         android:layout_width="66dp"
         android:layout_height="19dp"
         android:layout_marginStart="169dp"
@@ -107,7 +135,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/etCazuela2"
+        android:id="@+id/etCazuela"
         android:layout_width="95dp"
         android:layout_height="41dp"
         android:layout_marginStart="204dp"
@@ -115,7 +143,7 @@
         android:layout_marginEnd="112dp"
         android:layout_marginBottom="269dp"
         android:ems="9"
-        android:hint="@string/cantidad"
+        android:hint="Cantidad"
         android:inputType="number"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -153,22 +181,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/etPastel2"
-        android:layout_width="95dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="204dp"
-        android:layout_marginTop="256dp"
-        android:layout_marginEnd="95dp"
-        android:layout_marginBottom="428dp"
-        android:ems="10"
+        android:id="@+id/etPastel"
+        android:layout_width="120dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="43dp"
+        android:layout_marginEnd="77dp"
+        android:ems="9"
         android:hint="Cantidad"
         android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintHorizontal_bias="0.104"
+        app:layout_constraintStart_toStartOf="@+id/textView9"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <TextView
         android:id="@+id/textView9"

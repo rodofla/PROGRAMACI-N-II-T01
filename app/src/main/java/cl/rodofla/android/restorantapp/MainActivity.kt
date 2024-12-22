@@ -28,14 +28,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        configurarVista()
-        configurarEventos()
-    }
-
-    private fun configurarVista() {
         enableEdgeToEdge()
-        aplicarMargenesDeBarraDeSistema(findViewById(R.id.main))
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         editTextPastel = findViewById(R.id.etPastel)
         editTextCazuela = findViewById(R.id.etCazuela)
@@ -45,18 +44,16 @@ class MainActivity : AppCompatActivity() {
         textViewComida = findViewById(R.id.tvComida)
         textViewPropina = findViewById(R.id.tvPropina)
         textViewTotal = findViewById(R.id.tvTotal)
-    }
 
-    private fun aplicarMargenesDeBarraDeSistema(view: View) {
-        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        val textWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                mostrarTotal()
+            }
         }
-    }
 
-    private fun configurarEventos() {
-        val textWatcher = crearTextWatcher { mostrarTotal() }
         editTextPastel?.addTextChangedListener(textWatcher)
         editTextCazuela?.addTextChangedListener(textWatcher)
 
@@ -65,64 +62,35 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun crearTextWatcher(onTextChanged: () -> Unit): TextWatcher {
-        return object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                onTextChanged()
-            }
-        }
-    }
-
-
     private fun mostrarTotal() {
-        val cuentaMesa = configurarCuentaMesa()
-        val itemsMesa = obtenerItemsMesa()
+        val cuentaMesa = CuentaMesa(1)
+        cuentaMesa.aceptaPropina = switchPropina?.isChecked == true
 
-        itemsMesa.forEach { cuentaMesa.agregarItem(it.itemMenu, it.cantidad) }
+        val pastelMesa = ItemMesa(ItemMenu("Pastel de Choclo", "12000"), editTextPastel?.text.toString().toIntOrNull() ?: 0)
+        val cazuelaMesa = ItemMesa(ItemMenu("Cazuela", "10000"), editTextCazuela?.text.toString().toIntOrNull() ?: 0)
 
-        actualizarVistaConTotales(cuentaMesa, itemsMesa)
-    }
+        cuentaMesa.agregarItem(pastelMesa.itemMenu, pastelMesa.cantidad)
+        cuentaMesa.agregarItem(cazuelaMesa.itemMenu, cazuelaMesa.cantidad)
 
-    private fun configurarCuentaMesa(): CuentaMesa {
-        return CuentaMesa(1).apply {
-            aceptaPropina = switchPropina?.isChecked == true
-        }
-    }
+        val totalPastel = "$" + NumberFormat.getInstance().format(pastelMesa.calcularSubtotal())
+        val totalCazuela = "$" + NumberFormat.getInstance().format(cazuelaMesa.calcularSubtotal())
+        val totalComida = "$" + NumberFormat.getInstance().format(cuentaMesa.calcularTotalSinPropina())
 
-    private fun obtenerItemsMesa(): List<ItemMesa> {
-        return listOf(
-            crearItemMesa("Pastel de Choclo", 12000, editTextPastel),
-            crearItemMesa("Cazuela", 10000, editTextCazuela)
-        )
-    }
+        textViewPastel?.text = totalPastel
+        textViewCazuela?.text = totalCazuela
+        textViewComida?.text = totalComida
 
-    private fun crearItemMesa(nombre: String, precio: Int, editTextCantidad: EditText?): ItemMesa {
-        val cantidad = editTextCantidad?.text.toString().toIntOrNull() ?: 0
-        return ItemMesa(ItemMenu(nombre, precio.toString()), cantidad)
-    }
-
-    private fun actualizarVistaConTotales(cuentaMesa: CuentaMesa, itemsMesa: List<ItemMesa>) {
-        val formatter = NumberFormat.getInstance()
-
-        itemsMesa.forEach { item ->
-            val subtotal = "$" + formatter.format(item.calcularSubtotal())
-            when (item.itemMenu.nombre) {
-                "Pastel de Choclo" -> textViewPastel?.text = subtotal
-                "Cazuela" -> textViewCazuela?.text = subtotal
-            }
-        }
-
-        textViewComida?.text = "$" + formatter.format(cuentaMesa.calcularTotalSinPropina())
-
+        val propina: String
+        val totalFinal: String
         if (cuentaMesa.aceptaPropina) {
-            textViewPropina?.text = "$" + formatter.format(cuentaMesa.calcularPropina())
-            textViewTotal?.text = "$" + formatter.format(cuentaMesa.calcularTotalConPropina())
+            propina = "$" + NumberFormat.getInstance().format(cuentaMesa.calcularPropina())
+            totalFinal = "$" + NumberFormat.getInstance().format(cuentaMesa.calcularTotalConPropina())
         } else {
-            textViewPropina?.text = "$0"
-            textViewTotal?.text = textViewComida?.text
+            propina = "$0"
+            totalFinal = totalComida
         }
-    }
 
+        textViewPropina?.text = propina
+        textViewTotal?.text = totalFinal
+    }
 }
